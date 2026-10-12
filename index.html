@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#155eef">
+  <meta name="description" content="Free everyday calculators and useful tools for your phone.">
+  <title>Everyday Tools</title>
+  <style>
+    :root { color-scheme: light; --blue:#155eef; --ink:#152238; --muted:#65738b; --line:#e4eaf2; --bg:#f5f7fb; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--ink); }
+    header { background:linear-gradient(135deg,#155eef,#4f8cff); color:white; padding:28px 18px 24px; border-radius:0 0 24px 24px; }
+    header .wrap, main { max-width:760px; margin:auto; }
+    .eyebrow { font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; opacity:.88; font-weight:700; }
+    h1 { margin:7px 0 5px; font-size:2rem; }
+    header p { margin:0; opacity:.94; line-height:1.45; }
+    main { padding:18px 14px 36px; }
+    .tabs { display:flex; gap:8px; overflow:auto; padding:2px 0 14px; }
+    .tab { border:1px solid var(--line); background:white; color:var(--ink); border-radius:999px; padding:10px 14px; white-space:nowrap; font-weight:650; cursor:pointer; }
+    .tab[aria-selected="true"] { background:var(--blue); border-color:var(--blue); color:white; }
+    .card { background:white; border:1px solid var(--line); border-radius:18px; padding:18px; box-shadow:0 5px 18px rgba(20,40,80,.04); }
+    .card h2 { margin:0 0 6px; font-size:1.18rem; }
+    .hint { color:var(--muted); margin:0 0 18px; font-size:.92rem; line-height:1.45; }
+    label { display:block; font-size:.9rem; font-weight:650; margin:13px 0 6px; }
+    input, select { width:100%; padding:12px 13px; border:1px solid #cfd8e6; border-radius:11px; font:inherit; background:white; color:var(--ink); }
+    input:focus, select:focus { outline:3px solid #d9e6ff; border-color:var(--blue); }
+    .fields { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    button.primary { margin-top:16px; width:100%; padding:13px 15px; border:0; border-radius:12px; background:var(--blue); color:white; font:inherit; font-weight:750; cursor:pointer; }
+    button.secondary { border:1px solid var(--line); background:#fff; border-radius:10px; padding:9px 12px; font:inherit; cursor:pointer; }
+    .result { margin-top:16px; border-radius:14px; padding:15px; background:#eef4ff; border:1px solid #d7e5ff; }
+    .result .label { color:#425a80; font-size:.88rem; }
+    .result strong { display:block; font-size:1.75rem; margin-top:3px; overflow-wrap:anywhere; }
+    .result small { color:#425a80; }
+    .hidden { display:none; }
+    .tool-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:14px; }
+    .tool-tile { background:white; border:1px solid var(--line); border-radius:14px; padding:14px; cursor:pointer; text-align:left; color:var(--ink); }
+    .tool-tile strong { display:block; margin:5px 0 2px; }
+    .tool-tile span { color:var(--muted); font-size:.82rem; }
+    .emoji { font-size:1.3rem; }
+    footer { color:var(--muted); font-size:.8rem; line-height:1.5; text-align:center; padding:18px 10px 4px; }
+    @media (max-width:480px) { .fields { grid-template-columns:1fr; } h1 { font-size:1.8rem; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow">Simple • Free • Useful</div>
+      <h1>Everyday Tools</h1>
+      <p>Quick answers for everyday calculations — right on your phone.</p>
+    </div>
+  </header>
+  <main>
+    <div class="tool-grid" aria-label="Choose a tool">
+      <button class="tool-tile" data-tool="percent"><span class="emoji">％</span><strong>Percentage</strong><span>Find a percentage or discount</span></button>
+      <button class="tool-tile" data-tool="tip"><span class="emoji">€</span><strong>Tip calculator</strong><span>Split a bill with friends</span></button>
+      <button class="tool-tile" data-tool="units"><span class="emoji">↔</span><strong>Unit converter</strong><span>Length, weight and temperature</span></button>
+      <button class="tool-tile" data-tool="age"><span class="emoji">🎂</span><strong>Age calculator</strong><span>Calculate age in years</span></button>
+    </div>
+
+    <section class="card" id="percent">
+      <h2>Percentage & discount</h2>
+      <p class="hint">Calculate a percentage of a number, or find the price after a discount.</p>
+      <div class="tabs" role="tablist">
+        <button class="tab" data-mode="of" aria-selected="true">Percent of</button>
+        <button class="tab" data-mode="discount" aria-selected="false">Discount price</button>
+      </div>
+      <div class="fields">
+        <div><label for="percentValue">Amount (€ or number)</label><input id="percentValue" type="number" min="0" step="any" value="100"></div>
+        <div><label for="percentRate">Percentage (%)</label><input id="percentRate" type="number" min="0" step="any" value="20"></div>
+      </div>
+      <button class="primary" id="calcPercent">Calculate</button>
+      <div class="result" aria-live="polite"><div class="label" id="percentLabel">20% of 100 is</div><strong id="percentResult">20</strong><small id="percentExtra">—</small></div>
+    </section>
+
+    <section class="card hidden" id="tip">
+      <h2>Tip calculator</h2>
+      <p class="hint">Work out the tip and how much each person pays.</p>
+      <div class="fields">
+        <div><label for="bill">Bill total (€)</label><input id="bill" type="number" min="0" step="any" value="50"></div>
+        <div><label for="tipRate">Tip (%)</label><input id="tipRate" type="number" min="0" step="any" value="10"></div>
+      </div>
+      <label for="people">Number of people</label><input id="people" type="number" min="1" step="1" value="2">
+      <button class="primary" id="calcTip">Calculate</button>
+      <div class="result" aria-live="polite"><div class="label">Each person pays</div><strong id="tipResult">€27.50</strong><small id="tipExtra">Tip: €5.00 · Total: €55.00</small></div>
+    </section>
+
+    <section class="card hidden" id="units">
+      <h2>Unit converter</h2>
+      <p class="hint">Convert common units. Temperature is supported separately.</p>
+      <label for="unitType">Conversion type</label>
+      <select id="unitType"><option value="length">Kilometres ↔ miles</option><option value="weight">Kilograms ↔ pounds</option><option value="temp">Celsius ↔ Fahrenheit</option></select>
+      <div class="fields">
+        <div><label for="unitValue">Value</label><input id="unitValue" type="number" step="any" value="10"></div>
+        <div><label for="unitDirection">Direction</label><select id="unitDirection"><option value="forward">First unit → second</option><option value="reverse">Second unit → first</option></select></div>
+      </div>
+      <button class="primary" id="calcUnits">Convert</button>
+      <div class="result" aria-live="polite"><div class="label">Converted value</div><strong id="unitResult">6.21 miles</strong><small id="unitExtra">10 km ≈ 6.21 miles</small></div>
+    </section>
+
+    <section class="card hidden" id="age">
+      <h2>Age calculator</h2>
+      <p class="hint">Enter a date of birth to calculate your age today.</p>
+      <label for="birthDate">Date of birth</label><input id="birthDate" type="date">
+      <button class="primary" id="calcAge">Calculate age</button>
+      <div class="result" aria-live="polite"><div class="label">Your age</div><strong id="ageResult">—</strong><small id="ageExtra">Choose your date of birth.</small></div>
+    </section>
+    <footer>
+      This starter app works without an account and does not send your inputs to a server.
+      Results are estimates for everyday use. Check important calculations independently.
+    </footer>
+  </main>
+<script>
+  const $ = id => document.getElementById(id);
+  const fmt = (n, max=2) => Number.isFinite(n) ? n.toLocaleString(undefined,{maximumFractionDigits:max}) : "—";
+  let percentMode = "of";
+  function showTool(name) {
+    document.querySelectorAll("main > section.card").forEach(s => s.classList.toggle("hidden", s.id !== name));
+    document.querySelectorAll(".tool-tile").forEach(b => b.style.outline = b.dataset.tool === name ? "3px solid #d9e6ff" : "none");
+  }
+  document.querySelectorAll(".tool-tile").forEach(b => b.addEventListener("click", () => showTool(b.dataset.tool)));
+  document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => {
+    percentMode = b.dataset.mode;
+    document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", String(t === b)));
+    $("percentRate").previousElementSibling.textContent = percentMode === "of" ? "Percentage (%)" : "Discount (%)";
+    calcPercent();
+  }));
+  function calcPercent() {
+    const amount = Number($("percentValue").value), rate = Number($("percentRate").value);
+    if ($("percentValue").value === "" || $("percentRate").value === "" || amount < 0 || rate < 0) return;
+    const value = amount * rate / 100;
+    if (percentMode === "of") {
+      $("percentLabel").textContent = `${fmt(rate)}% of ${fmt(amount)} is`;
+      $("percentResult").textContent = fmt(value);
+      $("percentExtra").textContent = `${fmt(amount)} × ${fmt(rate)}%`;
+    } else {
+      $("percentLabel").textContent = `Price after ${fmt(rate)}% discount`;
+      $("percentResult").textContent = "€" + fmt(amount - value);
+      $("percentExtra").textContent = `You save €${fmt(value)} from €${fmt(amount)}`;
+    }
+  }
+  $("calcPercent").addEventListener("click", calcPercent);
+  function calcTip() {
+    const bill=Number($("bill").value), rate=Number($("tipRate").value), people=Math.floor(Number($("people").value));
+    if ($("bill").value==="" || $("tipRate").value==="" || bill<0 || rate<0 || people<1) return;
+    const tip=bill*rate/100, total=bill+tip;
+    $("tipResult").textContent="€"+fmt(total/people);
+    $("tipExtra").textContent=`Tip: €${fmt(tip)} · Total: €${fmt(total)} · ${people} ${people===1?"person":"people"}`;
+  }
+  $("calcTip").addEventListener("click",calcTip);
+  function calcUnits() {
+    const type=$("unitType").value, dir=$("unitDirection").value, val=Number($("unitValue").value);
+    if ($("unitValue").value==="") return;
+    let result, from, to;
+    if(type==="length"){ from=dir==="forward"?"km":"miles"; to=dir==="forward"?"miles":"km"; result=dir==="forward"?val/1.609344:val*1.609344; }
+    else if(type==="weight"){ from=dir==="forward"?"kg":"lb"; to=dir==="forward"?"lb":"kg"; result=dir==="forward"?val*2.2046226218:val/2.2046226218; }
+    else { from=dir==="forward"?"°C":"°F"; to=dir==="forward"?"°F":"°C"; result=dir==="forward"?(val*9/5+32):((val-32)*5/9); }
+    $("unitResult").textContent=`${fmt(result)} ${to}`;
+    $("unitExtra").textContent=`${fmt(val)} ${from} ≈ ${fmt(result)} ${to}`;
+  }
+  $("calcUnits").addEventListener("click",calcUnits);
+  $("unitType").addEventListener("change",calcUnits); $("unitDirection").addEventListener("change",calcUnits);
+  function calcAge() {
+    const value=$("birthDate").value;
+    if(!value){$("ageResult").textContent="—";$("ageExtra").textContent="Choose your date of birth.";return;}
+    const birth=new Date(value+"T12:00:00"), today=new Date();
+    if(birth>today){$("ageResult").textContent="Invalid date";$("ageExtra").textContent="Date of birth must not be in the future.";return;}
+    let years=today.getFullYear()-birth.getFullYear(), months=today.getMonth()-birth.getMonth(), days=today.getDate()-birth.getDate();
+    if(days<0){months--;days+=new Date(today.getFullYear(),today.getMonth(),0).getDate();}
+    if(months<0){years--;months+=12;}
+    $("ageResult").textContent=`${years} years`;
+    $("ageExtra").textContent=`${months} months and ${days} days`;
+  }
+  $("calcAge").addEventListener("click",calcAge);
+  calcPercent(); calcTip(); calcUnits();
+</script>
+</body>
+</html>
